@@ -1,5 +1,6 @@
 # HDFS_CQU
-...
+...</br>
+
 Maven编译
 cd /hadoop-2.6.0-src/hadoop-hdfs-project/hadoop-hdfs</br>
 mvn package -Pdist -DskipTests -Dtar</br>
