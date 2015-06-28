@@ -8,7 +8,7 @@ use "mvn -v" to check</br>
 use "protoc --version" to check</br>
 3.something need to be done</br>
 add TestAvroSerialization.java to hadoop-common/src/test/java/org/apache/hadoop/io/serializer/avro/</br>
-add TestProtos.java, TestRpcServiceProtos.java to hadoop-common/src/main/java/org/apache/hadoop/ipc/protobuf/</br>
+add TestProtos.java, TestRpcServiceProtos.java to hadoop-common/src/test/java/org/apache/hadoop/ipc/protobuf/</br>
 cd hadoop-2.6.0-src/hadoop-maven-plugins/ </br>
 mvn install</br>
 cd hadoop-2.6.0-src/</br>
@@ -17,16 +17,20 @@ mvn eclipse:eclipse -DskipTests</br>
 in "hadoop-streaming" project build path </br>
 rebuild the source link "hadoop-2.6.0-src/hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/conf", remove the original one.</br>
 
+#import the source code of tachyon to eclipse
+1.cd tachyon-0.6.4</br>
+2.mvn eclipse:eclipse -DskipTests</br>
+3.import and fix problems.</br>
 
 #use maven to compile 
 java 1.7</br>
 mvn package -Pdist -DskipTests -Dtar</br>
 java 1.8</br>
-mvn package -Pdist -DskipTests -Dtar </br>
+mvn package -Pdist -DskipTests -Dtar -Dadditionalparam=-Xdoclint:none </br>
 copy the *.jar from target/ in source code to share/ which used by hadoop.</br>
 
 #what we have done now
-1.put the data submitted by the client to HDFS in a certain positions.</br>
+1.put the data submitted by the client to HDFS in a certain datanode.</br>
 related class and method:</br>
 NameNodeRpcServer:addBlock()------return type:LocatedBlock</br>
 FSNamesystem:getAdditionalBlock()------return type:LocatedBlock</br>
@@ -35,10 +39,28 @@ BlockPlacementPolicyDefault:chooseTarget()------return type:DatanodeStorageInfo[
 Host2NodeMap:getDatanodeByHost()------return type:DatanodeDescriptor</br>
 Host2NodeMap:getDatanodeByXferAddr()------return type:DatanodeDescriptor</br>
 DatanodeDescriptor:getStorageInfos()------return type:DatanodeStorageInfo[]</br>
-2.use SSD as a datanode</br>
-3.compute the time of map</br>
-4.compute the time of getting split into buffer </br>
+2.use SSD, MEMORY as a datanode.</br>
+3.do some tachyon experiments.
+4.put the data submitted by the client to HDFS in some datanodes according to the proportion.</br>
+5.modify relax_locality to false in yarn_protos.proto to implement data locality.</br>
+6.to set rack parameters in core.site.xml.</br>
 
+#some commands in hadoop
+hadoop namenode -format</br>
+hadoop fs -put file(s) file(d)</br>
+hadoop fs -rm [-r] file</br>
+hadoop fs -rm hdfs://node1(which namenode is located on):9000/*</br>
+hadoop dfsadmin -safemode leave</br>
+hadoop dfsadmin -report</br>
+
+#compile a mapreduce program
+bin/hadoop com.sun.tools.javac.Main *.java</br>
+jar cf classname.jar *.class</br>
+
+
+#what we are going to do
+1.to find a relationship between containers and map tasks.</br>
+2.do some benchmarks to show the different performance about memory and disk.</br>  
 
 
 </br>
