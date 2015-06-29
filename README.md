@@ -93,7 +93,7 @@ DatanodeDescriptor:getStorageInfos()------return type:DatanodeStorageInfo[]</br>
 	}</br>
 
 5.modify relax_locality to false in yarn_protos.proto to implement data locality.</br>
-6.to set rack parameters in core.site.xml.</br>
+6.to set rack parameters "net.topology.script.file.name" in core.site.xml by using "RackAware.py"</br>
 
 #some commands in hadoop
 hadoop namenode -format</br>
