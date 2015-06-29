@@ -42,6 +42,56 @@ DatanodeDescriptor:getStorageInfos()------return type:DatanodeStorageInfo[]</br>
 2.use SSD, MEMORY as a datanode.</br>
 3.do some tachyon experiments.
 4.put the data submitted by the client to HDFS in some datanodes according to the proportion.</br>
+1>make a proportion</br>
+  static int count[] = { 8, 1, 1 };</br>
+2>modify the chooseTarget method</br>
+	public DatanodeStorageInfo[] inmemTarget(String srcPath, int numOfReplicas,</br>
+			Node writer, List<DatanodeStorageInfo> chosenNodes,</br>
+			boolean returnChosenNodes, Set<Node> excludedNodes, long blocksize,</br>
+			final BlockStoragePolicy storagePolicy) {</br>
+
+		if (count[0] != 0) {</br>
+			DatanodeDescriptor Test1 = this.host2datanodeMap</br>
+					.getDatanodeByHost("222.198.132.207");</br>
+			DatanodeStorageInfo[] testTarget1 = Test1.getStorageInfos();</br>
+			DatanodeStorageInfo[] testTarget = new DatanodeStorageInfo[1];</br> 
+			testTarget[0] = testTarget1[0];</br>
+			count[0]--;</br>
+			return testTarget;</br>
+		} else if (count[1] != 0) {</br>
+			DatanodeDescriptor Test1 = this.host2datanodeMap</br>
+					.getDatanodeByHost("222.198.132.210");</br>
+  		DatanodeStorageInfo[] testTarget1 = Test1.getStorageInfos();</br>
+			DatanodeStorageInfo[] testTarget = new DatanodeStorageInfo[1];</br> 
+			testTarget[0] = testTarget1[0];</br>
+			count[1]--;</br>
+			return testTarget;</br>
+		} else if (count[2] != 0) {</br>
+			DatanodeDescriptor Test1 = this.host2datanodeMap</br>
+					.getDatanodeByHost("222.198.132.208");</br>
+			DatanodeStorageInfo[] testTarget1 = Test1.getStorageInfos();</br>
+			DatanodeStorageInfo[] testTarget = new DatanodeStorageInfo[1]; </br>
+			testTarget[0] = testTarget1[0];</br>
+			count[2]--;</br>
+			return testTarget;</br>
+		}</br>
+  	else {</br>
+			count[0] = 8;</br>
+			count[1] = 1;</br>
+			count[2] = 1;</br>
+			// get datanode by ip address</br>
+			DatanodeDescriptor Test1 = this.host2datanodeMap</br>
+					.getDatanodeByHost("222.198.132.207");</br>
+			// get datanode by (ip, port)</br>
+			// this.host2datanodeMap.getDatanodeByXferAddr("172.31.8.147",59010);</br>
+			DatanodeStorageInfo[] testTarget1 = Test1.getStorageInfos();</br>
+	  	DatanodeStorageInfo[] testTarget = new DatanodeStorageInfo[1]; </br>
+			testTarget[0] = testTarget1[0];</br>
+			count[0]--;</br>
+			return testTarget;</br>
+		}</br>
+	}</br>
+
 5.modify relax_locality to false in yarn_protos.proto to implement data locality.</br>
 6.to set rack parameters in core.site.xml.</br>
 
