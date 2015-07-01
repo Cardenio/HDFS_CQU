@@ -93,7 +93,11 @@ DatanodeDescriptor:getStorageInfos()------return type:DatanodeStorageInfo[]</br>
 	}</br>
 
 5.modify relax_locality to false in yarn_protos.proto to implement data locality.</br>
-6.to set rack parameters "net.topology.script.file.name" in core.site.xml by using "RackAware.py"</br>
+6.to set rack parameters "net.topology.script.file.name" in core.site.xml by using "RackAware.py".</br>
+7.two corresponding relations: containers and maptasks, containers and datanodes.</br>
+related class and method:
+RMContainerAllocator:addMap()------return type:void</br>
+RMContainerAllocator:assignMapsWithLocality()------return type:void</br>
 
 #some commands in hadoop
 hadoop namenode -format</br>
@@ -109,8 +113,9 @@ jar cf classname.jar *.class</br>
 
 
 #what we are going to do
-1.to find a relationship between containers and map tasks.</br>
+1.the impact of vcore and vmemory.</br> 
 2.do some benchmarks to show the different performance about memory and disk.</br>  
+3.put all containers in the same node.
 
 
 </br>
